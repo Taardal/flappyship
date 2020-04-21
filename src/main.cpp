@@ -33,5 +33,5 @@ st::Application* CreateApplication(
         st::ResourceLoader* resourceLoader
 )
 {
-    return new Flappyship(window, renderer, imGuiRenderer, cameraController);
+    return new Flappyship(window, renderer, imGuiRenderer, cameraController, resourceLoader);
 }

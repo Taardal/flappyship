@@ -6,9 +6,11 @@ class GameLayer : public st::Layer
 {
 private:
     st::Renderer* renderer;
+    st::Ref<st::Texture> shipTexture;
+    st::Ref<st::Texture> triangleTexture;
 
 public:
-    explicit GameLayer(st::Renderer* renderer);
+    explicit GameLayer(st::Renderer* renderer, st::ResourceLoader* resourceLoader);
 
     void OnAttach() override;
 

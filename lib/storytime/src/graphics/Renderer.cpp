@@ -22,6 +22,8 @@ namespace storytime
 
     Renderer::Renderer(ResourceLoader* resourceLoader)
     {
+        ST_GL_CALL(ST_TAG, glEnable(GL_BLEND));
+        ST_GL_CALL(ST_TAG, glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
         ST_GL_CALL(ST_TAG, glClearColor(0.1f, 0.1f, 0.1f, 1));
 
         vertices = new Vertex[VERTICES_PER_BATCH];
