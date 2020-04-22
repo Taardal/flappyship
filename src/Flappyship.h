@@ -15,7 +15,8 @@ public:
             st::Renderer* renderer,
             st::ImGuiRenderer* imGuiRenderer,
             st::OrthographicCameraController* cameraController,
-            st::ResourceLoader* resourceLoader
+            st::ResourceLoader* resourceLoader,
+            st::Input* input
     );
 
     ~Flappyship();

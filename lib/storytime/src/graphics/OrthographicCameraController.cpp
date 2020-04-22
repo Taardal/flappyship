@@ -23,6 +23,12 @@ namespace storytime
         return camera;
     }
 
+    void OrthographicCameraController::SetZoomLevel(float zoomLevel)
+    {
+        this->zoomLevel = zoomLevel;
+        SetCameraProjection();
+    }
+
     void OrthographicCameraController::OnUpdate(Timestep timestep, Input* input)
     {
         if (input->IsKeyPressed(KeyCode::KEY_A))

@@ -24,7 +24,8 @@ namespace storytime
     {
         ST_GL_CALL(ST_TAG, glEnable(GL_BLEND));
         ST_GL_CALL(ST_TAG, glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-        ST_GL_CALL(ST_TAG, glClearColor(0.1f, 0.1f, 0.1f, 1));
+        ST_GL_CALL(ST_TAG, glEnable(GL_DEPTH_TEST));
+        ST_GL_CALL(ST_TAG, glClearColor(1.0f, 0.0f, 1.0f, 1.0f));
 
         vertices = new Vertex[VERTICES_PER_BATCH];
         uint32_t vertexBufferSize = sizeof(Vertex) * VERTICES_PER_BATCH;
@@ -101,7 +102,7 @@ namespace storytime
     void Renderer::BeginScene(OrthographicCamera* camera)
     {
         Reset();
-        ST_GL_CALL(ST_TAG, glClear(GL_COLOR_BUFFER_BIT));
+        ST_GL_CALL(ST_TAG, glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         shader->SetMat4("viewProjection", camera->GetViewProjection());
     }
 
@@ -110,7 +111,7 @@ namespace storytime
         Flush();
     }
 
-    void Renderer::DrawQuad(Quad& quad)
+    void Renderer::SubmitQuad(Quad& quad)
     {
         if (indexCount >= INDICES_PER_BATCH)
         {
@@ -142,6 +143,24 @@ namespace storytime
         const auto& rotation = glm::rotate(glm::mat4(1.0f), glm::radians(quad.RotationInDegrees), { 0.0f, 0.0f, 1.0f });
         const auto& scale = glm::scale(glm::mat4(1.0f), { quad.Size.x, quad.Size.y, 1.0f });
         glm::mat4 transform = translation * rotation * scale;
+
+        /*
+        vertices[vertexCount].Position = quad.Position;
+        vertices[vertexCount].Color = quad.Color;
+        vertexCount++;
+
+        vertices[vertexCount].Position = { quad.Position.x + quad.Size.x, quad.Position.y, 1.0f };
+        vertices[vertexCount].Color = quad.Color;
+        vertexCount++;
+
+        vertices[vertexCount].Position = { quad.Position.x + quad.Size.x, quad.Position.y + quad.Size.y, 1.0f};
+        vertices[vertexCount].Color = quad.Color;
+        vertexCount++;
+
+        vertices[vertexCount].Position = { quad.Position.x, quad.Position.y + quad.Size.y, 1.0f };
+        vertices[vertexCount].Color = quad.Color;
+        vertexCount++;
+        */
 
         vertices[vertexCount].Position = transform * glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f);
         vertices[vertexCount].Color = quad.Color;

@@ -75,7 +75,7 @@ namespace storytime
 
         void BeginScene(OrthographicCamera* camera);
 
-        void DrawQuad(Quad& quad);
+        void SubmitQuad(Quad& quad);
 
         void EndScene();
 

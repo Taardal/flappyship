@@ -27,6 +27,8 @@ namespace storytime
 
         [[nodiscard]] OrthographicCamera* GetCamera() const;
 
+        void SetZoomLevel(float zoomLevel);
+
         void OnUpdate(Timestep timestep, Input* input);
 
         void OnEvent(const Event& event);

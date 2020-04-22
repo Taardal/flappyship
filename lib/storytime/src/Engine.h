@@ -1,6 +1,7 @@
 #pragma once
 
 #include "system/Log.h"
+#include "system/Random.h"
 #include "system/Application.h"
 #include "system/FileSystem.h"
 #include "system/ResourceLoader.h"

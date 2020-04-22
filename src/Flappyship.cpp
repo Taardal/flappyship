@@ -6,10 +6,12 @@ Flappyship::Flappyship(
         st::Renderer* renderer,
         st::ImGuiRenderer* imGuiRenderer,
         st::OrthographicCameraController* cameraController,
-        st::ResourceLoader* resourceLoader
+        st::ResourceLoader* resourceLoader,
+        st::Input* input
 )
-        : Application(window, renderer, imGuiRenderer, cameraController), gameLayer(new GameLayer(renderer, resourceLoader))
+        : Application(window, renderer, imGuiRenderer, cameraController)
 {
+    gameLayer = new GameLayer(renderer, input, resourceLoader, cameraController);
     PushLayer(gameLayer);
 }
 

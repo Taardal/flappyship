@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "system/Random.h"
 
 extern storytime::Application* CreateApplication(
         storytime::Window* window,
@@ -14,6 +15,7 @@ namespace storytime
     Engine::Engine(const Config& config)
     {
         Log::Init(config.logLevel);
+        Random::Init();
 
         fileSystem = new FileSystem();
         resourceLoader = new ResourceLoader(fileSystem);
