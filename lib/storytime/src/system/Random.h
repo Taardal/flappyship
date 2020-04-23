@@ -6,15 +6,11 @@ namespace storytime
 {
     class Random
     {
-    private:
-        static std::mt19937 randomEngine;
-        static std::uniform_int_distribution<std::mt19937::result_type> distribution;
-
+        std::mt19937 generator;
     public:
-        static void Init();
+        Random();
 
-        static float Float();
-
+        uint32_t UInt(uint32_t min, uint32_t max);
     };
 }
 

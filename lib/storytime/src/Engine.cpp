@@ -15,7 +15,6 @@ namespace storytime
     Engine::Engine(const Config& config)
     {
         Log::Init(config.logLevel);
-        Random::Init();
 
         fileSystem = new FileSystem();
         resourceLoader = new ResourceLoader(fileSystem);

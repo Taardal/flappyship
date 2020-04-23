@@ -15,6 +15,11 @@ private:
     st::Quad floorQuad;
     Player* player;
     float gravity;
+    float cameraWidth;
+    float cameraHeight;
+    float pillarWidth;
+    float pillarHeight;
+    float pillarWidthFactor;
 
     std::vector<st::Quad> pillars;
     int pillarForRecyclingIndex;

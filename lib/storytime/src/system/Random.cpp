@@ -3,16 +3,15 @@
 
 namespace storytime
 {
-    std::mt19937 Random::randomEngine;
-    std::uniform_int_distribution<std::mt19937::result_type> Random::distribution;
-
-    void Random::Init()
+    Random::Random()
+            : generator(std::random_device()())
     {
-        randomEngine.seed(std::random_device()());
     }
 
-    float Random::Float()
+    uint32_t Random::UInt(uint32_t min, uint32_t max)
     {
-        return (float) distribution(randomEngine) / (float) std::numeric_limits<uint32_t>::max();
+        std::uniform_int_distribution<uint32_t> distribution(min, max);
+        return distribution(generator);
     }
+
 }
