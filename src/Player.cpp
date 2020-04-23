@@ -1,10 +1,11 @@
 #include "Player.h"
 
-#include <utility>
-
-void Player::SetTexture(st::Ref<st::Texture> texture)
+Player::Player(const Config& config)
+     : startPosition(config.Position), startVelocity(config.Velocity), velocity(config.Velocity), enginePower(config.EnginePower)
 {
-    quad.Texture = std::move(texture);
+    quad.Texture = config.Texture;
+    quad.Position = config.Position;
+    quad.Size = { config.Width, config.Height };
 }
 
 glm::vec3 Player::GetPosition() const
@@ -12,37 +13,7 @@ glm::vec3 Player::GetPosition() const
     return quad.Position;
 }
 
-void Player::SetPosition(glm::vec3 position)
-{
-    quad.Position = position;
-}
-
-void Player::SetSize(glm::vec2 size)
-{
-    quad.Size = size;
-}
-
-glm::vec3 Player::GetVelocity() const
-{
-    return velocity;
-}
-
-void Player::SetVelocity(glm::vec3 velocity)
-{
-    this->velocity = velocity;
-}
-
-void Player::SetRotationInDegrees(int32_t rotationInDegrees)
-{
-    quad.RotationInDegrees = rotationInDegrees;
-}
-
-void Player::SetEnginePower(float enginePower)
-{
-    this->enginePower = enginePower;
-}
-
-void Player::OnUpdate(st::Renderer* renderer, st::Input* input, st::Timestep timestep, float gravity)
+void Player::OnUpdate(st::Input* input, st::Timestep timestep, float gravity)
 {
     if (input->IsKeyPressed(st::KeyCode::KEY_SPACE))
     {
@@ -76,4 +47,11 @@ void Player::OnUpdate(st::Renderer* renderer, st::Input* input, st::Timestep tim
 void Player::OnRender(st::Renderer* renderer)
 {
     renderer->SubmitQuad(quad);
+}
+
+void Player::Reset()
+{
+    quad.Position = startPosition;
+    quad.RotationInDegrees = 0;
+    velocity = startVelocity;
 }

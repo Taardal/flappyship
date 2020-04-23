@@ -4,31 +4,34 @@
 
 class Player
 {
+public:
+    struct Config
+    {
+        st::Ref<st::Texture> Texture;
+        glm::vec3 Position;
+        glm::vec3 Velocity;
+        float Width;
+        float Height;
+        float EnginePower;
+    };
+
 private:
-    st::Quad quad{};
+    glm::vec3 startPosition;
+    glm::vec3 startVelocity;
     glm::vec3 velocity;
     float enginePower;
+    st::Quad quad;
 
 public:
-    void SetTexture(st::Ref<st::Texture> texture);
+    explicit Player(const Config& config);
 
     [[nodiscard]] glm::vec3 GetPosition() const;
 
-    void SetPosition(glm::vec3 position);
-
-    void SetSize(glm::vec2 size);
-
-    [[nodiscard]] glm::vec3 GetVelocity() const;
-
-    void SetVelocity(glm::vec3 velocity);
-
-    void SetRotationInDegrees(int32_t rotationInDegrees);
-
-    void SetEnginePower(float enginePower);
-
-    void OnUpdate(st::Renderer* renderer, st::Input* input, st::Timestep timestep, float gravity);
+    void OnUpdate(st::Input* input, st::Timestep timestep, float gravity);
 
     void OnRender(st::Renderer* renderer);
+
+    void Reset();
 };
 
 

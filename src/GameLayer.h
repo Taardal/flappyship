@@ -18,34 +18,9 @@ private:
     st::Renderer* renderer;
     st::Input* input;
     st::OrthographicCameraController* cameraController;
-    st::Ref<st::Texture> triangleTexture;
-    st::Quad backgroundQuad;
-    st::Quad ceilingQuad;
-    st::Quad floorQuad;
-    Player* player;
-    float gravity;
-
+    GameState gameState;
     float cameraWidth;
     float cameraHeight;
-    float pillarWidth;
-    float pillarHeight;
-    float pillarWidthFactor;
-
-    std::vector<st::Quad> pillars;
-    int pillarForRecyclingIndex;
-    float pillarRecyclingX;
-    float recycledPillarX;
-
-    st::Random random;
-    uint32_t gapMin;
-    uint32_t gapMax;
-    uint32_t centerMin;
-    uint32_t centerMax;
-    float pillarGap;
-    float pillarCenter;
-    bool pillarCenterUp;
-
-    GameState gameState;
     Level* level;
 
 public:
@@ -64,9 +39,9 @@ public:
     void OnEvent(const storytime::Event& event) override;
 
 private:
-    [[nodiscard]] float GetPillarY(const st::Quad& pillar) const;
+    void UpdateCamera() const;
 
-    void RecyclePillars();
+    [[nodiscard]] bool IsGameOver() const;
 };
 
 
