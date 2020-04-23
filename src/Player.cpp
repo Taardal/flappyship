@@ -32,6 +32,11 @@ void Player::SetVelocity(glm::vec3 velocity)
     this->velocity = velocity;
 }
 
+void Player::SetRotationInDegrees(int32_t rotationInDegrees)
+{
+    quad.RotationInDegrees = rotationInDegrees;
+}
+
 void Player::SetEnginePower(float enginePower)
 {
     this->enginePower = enginePower;
@@ -66,6 +71,9 @@ void Player::OnUpdate(st::Renderer* renderer, st::Input* input, st::Timestep tim
     //quad.Position.y = glm::clamp(quad.Position.y, -1.5f, 1.5f);
 
     quad.RotationInDegrees = velocity.y * 4.0f - 90.0f;
+}
 
+void Player::OnRender(st::Renderer* renderer)
+{
     renderer->SubmitQuad(quad);
 }
