@@ -47,6 +47,12 @@ Player* Level::GetPlayer() const
     return player;
 }
 
+uint32_t Level::GetScore() const
+{
+    float spikeWidth = spikePool->GetSpikeWidth();
+    return (player->GetPosition().x + spikeWidth) / spikeWidth;
+}
+
 void Level::OnUpdate(st::Input* input, st::Timestep timestep)
 {
     player->OnUpdate(input, timestep, GRAVITY);

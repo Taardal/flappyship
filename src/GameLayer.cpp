@@ -65,7 +65,7 @@ void GameLayer::OnImGuiUpdate()
 {
     auto stats = renderer->GetStatistics();
     ImGui::Begin("Rendering");
-    ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+    ImGui::Text("Draw calls: %d", stats.DrawCalls);
     ImGui::Text("Quads: %d", stats.QuadCount);
     ImGui::Text("Vertices: %d", stats.GetVertexCount());
     ImGui::Text("Indices: %d", stats.GetIndexCount());
@@ -81,7 +81,7 @@ void GameLayer::OnImGuiUpdate()
         }
         case GameState::Play:
         {
-            ImGui::Text("Score: 10");
+            ImGui::Text("Score: %d", level->GetScore());
             break;
         }
         default:

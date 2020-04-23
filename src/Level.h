@@ -22,6 +22,8 @@ public:
 
     [[nodiscard]] Player* GetPlayer() const;
 
+    [[nodiscard]] uint32_t GetScore() const;
+
     void OnUpdate(st::Input* input, st::Timestep timestep);
 
     void OnRender(st::Renderer* renderer);

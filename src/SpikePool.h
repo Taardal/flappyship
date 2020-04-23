@@ -36,6 +36,8 @@ private:
 public:
     explicit SpikePool(const Config& config);
 
+    [[nodiscard]] uint32_t GetSpikeWidth() const;
+
     void OnUpdate(const glm::vec3& playerPosition);
 
     void OnRender(st::Renderer* renderer);

@@ -24,6 +24,11 @@ SpikePool::SpikePool(const Config& config)
     Reset();
 }
 
+uint32_t SpikePool::GetSpikeWidth() const
+{
+    return spikeWidth * spikeWidthFactor;
+}
+
 void SpikePool::OnUpdate(const glm::vec3& playerPosition)
 {
     if (playerPosition.x > nextTriggerX)
@@ -71,10 +76,8 @@ void SpikePool::Reset()
             SetNextCenterPoint();
         }
     }
-    st::Quad middleSpike = spikes[(spikes.size() / 2) - 1];
-    nextTriggerX = middleSpike.Position.x + (middleSpike.Size.x * spikeWidthFactor);
-    st::Quad lastSpike = spikes[spikes.size() - 1];
-    nextX = lastSpike.Position.x + (lastSpike.Size.x * spikeWidthFactor);
+    nextTriggerX = spikes[(spikes.size() / 2) - 1].Position.x + GetSpikeWidth();
+    nextX = spikes[spikes.size() - 1].Position.x + GetSpikeWidth();
     nextIndex = 0;
 }
 
@@ -91,8 +94,8 @@ void SpikePool::SetNextCenterPoint()
 
 void SpikePool::SetNextPositions()
 {
-    nextX += spikes[0].Size.x * spikeWidthFactor;
-    nextTriggerX += spikes[0].Size.x * spikeWidthFactor;
+    nextX += GetSpikeWidth();
+    nextTriggerX += GetSpikeWidth();
 }
 
 float SpikePool::GetY(const st::Quad& spike) const
