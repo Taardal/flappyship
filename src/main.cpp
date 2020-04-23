@@ -7,7 +7,7 @@ int main()
     windowConfig.Title = "Sandbox";
     windowConfig.Width = 1280;
     windowConfig.Height = windowConfig.Width / 16 * 12;
-    windowConfig.Maximized = true;
+    windowConfig.Maximized = false;
 
     st::GraphicsContext::Config graphicsConfig = {};
     graphicsConfig.VersionMajor = 4;

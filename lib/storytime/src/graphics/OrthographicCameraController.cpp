@@ -23,6 +23,16 @@ namespace storytime
         return camera;
     }
 
+    const glm::vec3& OrthographicCameraController::GetCameraPosition() const
+    {
+        return cameraPosition;
+    }
+
+    float OrthographicCameraController::GetZoomLevel() const
+    {
+        return zoomLevel;
+    }
+
     void OrthographicCameraController::SetZoomLevel(float zoomLevel)
     {
         this->zoomLevel = zoomLevel;

@@ -60,12 +60,12 @@ void Player::OnUpdate(st::Renderer* renderer, st::Input* input, st::Timestep tim
     {
         velocity.y -= gravity;
     }
-    velocity.y = glm::clamp(velocity.y, -5.0f, 5.0f);
+    velocity.y = glm::clamp(velocity.y, -20.0f, 20.0f);
 
     quad.Position += velocity * (float) timestep;
-    quad.Position.y = glm::clamp(quad.Position.y, -1.5f, 1.5f);
+    //quad.Position.y = glm::clamp(quad.Position.y, -1.5f, 1.5f);
 
-    quad.RotationInDegrees = velocity.y * 20.0f - 90.0f;
+    quad.RotationInDegrees = velocity.y * 4.0f - 90.0f;
 
     renderer->SubmitQuad(quad);
 }

@@ -3,14 +3,6 @@
 #include "Player.h"
 #include <storytime/Storytime.h>
 
-struct Pillar
-{
-    glm::vec3 TopPosition;
-    glm::vec2 TopScale;
-    glm::vec3 BottomPosition;
-    glm::vec2 BottomScale;
-};
-
 class GameLayer : public st::Layer
 {
 private:
@@ -18,13 +10,16 @@ private:
     st::Input* input;
     st::OrthographicCameraController* cameraController;
     st::Ref<st::Texture> triangleTexture;
+    st::Quad backgroundQuad;
+    st::Quad ceilingQuad;
+    st::Quad floorQuad;
     Player* player;
     float gravity;
 
-    std::vector<Pillar> pillars;
-    int pillarIndex;
-    float pillarTarget;
-    float nextPillarX;
+    std::vector<st::Quad> pillars;
+    int pillarForRecyclingIndex;
+    float pillarRecyclingX;
+    float pillarForRecyclingNextX;
 
 public:
     explicit GameLayer(st::Renderer* renderer, st::Input* input, st::ResourceLoader* resourceLoader, st::OrthographicCameraController* cameraController);

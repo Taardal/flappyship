@@ -3,44 +3,65 @@
 GameLayer::GameLayer(st::Renderer* renderer, st::Input* input, st::ResourceLoader* resourceLoader, st::OrthographicCameraController* cameraController)
         : st::Layer("GameLayer"), renderer(renderer), input(input), cameraController(cameraController)
 {
-    cameraController->SetZoomLevel(1.5f);
+    cameraController->SetZoomLevel(20.0f);
+    float cameraHeight = cameraController->GetZoomLevel() * 2;
+    float cameraWidth = cameraHeight / 12 * 16;
 
-    player = new Player();
-    player->SetTexture(resourceLoader->LoadTexture("ship.png"));
-    player->SetSize({ 0.1f, 0.13f });
-    player->SetPosition({ 0.0f, 0.0f, 1.0f });
-    player->SetVelocity({ 0.5f, 2.0f, 0.0f });
-    player->SetEnginePower(0.025f);
+    backgroundQuad.Size = { cameraWidth, cameraHeight };
+    backgroundQuad.Color = { 0.3f, 0.3f, 0.3f, 1.0f };
+
+    ceilingQuad.Size = { backgroundQuad.Size.x, 5.0f };
+    ceilingQuad.Color = { 0.2f, 0.3f, 0.8f, 1.0f };
+
+    floorQuad.Size = { backgroundQuad.Size.x, ceilingQuad.Size.y };
+    floorQuad.Color = ceilingQuad.Color;
 
     triangleTexture = resourceLoader->LoadTexture("triangle.png");
 
-    gravity = 0.01f;
-
-    pillars.resize(8);
+    float pillarX = 0.0f;
+    float pillarPairs = 6;
+    pillars.resize(pillarPairs * 2);
     for (uint32_t i = 0; i < pillars.size(); i++)
     {
-        Pillar& pillar = pillars[i];
+        st::Quad& pillar = pillars[i];
+        pillar.Texture = triangleTexture;
+        pillar.Color = { 0.2f, 0.8f, 0.2f, 1.0f };
+        pillar.Size = { 10.0f, (cameraHeight / 2) * 0.9f };
+        pillar.Position = { pillarX, 0.0f, ceilingQuad.Position.z + 0.1f };
+        if (i % 2 == 0)
+        {
+            pillar.RotationInDegrees = 180.0f;
+        }
+        else
+        {
+            pillar.RotationInDegrees = 0.0f;
+            pillarX += pillar.Size.x;
+        }
+    }
+    st::Quad middlePillar = pillars[(pillars.size() / 2) - 1];
+    st::Quad lastPillar = pillars[pillars.size() - 1];
+    pillarRecyclingX = middlePillar.Position.x + middlePillar.Size.x;
+    pillarForRecyclingNextX = lastPillar.Position.x + lastPillar.Size.x;
+    pillarForRecyclingIndex = 0;
 
-        pillar.TopScale = { 1.0f, 2.5f };
-        pillar.TopPosition.x = i;
-        pillar.TopPosition.y = 1.25f;
-        pillar.TopPosition.z = 0.5f;
-
-        pillar.BottomScale = { 1.0f, 2.5f };
-        pillar.BottomPosition.x = i;
-        pillar.BottomPosition.y = -1.25f;
-        pillar.BottomPosition.z = 0.5f;
-
+    /*
         float center = st::Random::Float() * 2.5f - 1.5f;
         float gap = 1.25f + st::Random::Float() * 2.5f;
 
         pillar.TopPosition.y = 1.25f - ((1.25f - center) * 0.5f) + gap * 0.1f;
         pillar.BottomPosition.y = -1.25f - ((-1.25f - center) * 0.5f) - gap * 0.1f;
-    }
+    */
 
-    pillarIndex = 0;
-    pillarTarget = pillars[(pillars.size() / 2) - 1].TopPosition.x + pillars[(pillars.size() / 2) - 1].TopScale.x;
-    nextPillarX = pillars[pillars.size() - 1].TopPosition.x + pillars[pillars.size() - 1].TopScale.x;
+    float playerWidth = cameraWidth / 20.0f;
+    float playerHeight = playerWidth * 1.3f;
+    player = new Player();
+    player->SetTexture(resourceLoader->LoadTexture("ship.png"));
+    player->SetSize({ playerWidth, playerHeight });
+    player->SetPosition({ 0.0f, 0.0f, 1.0f });
+    player->SetVelocity({ 5.0f, 0.0f, 0.0f });
+    player->SetEnginePower(0.1f);
+
+    gravity = 0.05f;
 }
 
 GameLayer::~GameLayer()
@@ -59,73 +80,45 @@ void GameLayer::OnDetach()
 
 void GameLayer::OnUpdate(st::Timestep timestep)
 {
-    if (player->GetPosition().x > pillarTarget)
-	{
-        Pillar& pillar = pillars[pillarIndex];
-
-        pillar.TopScale = { 1.0f, 2.5f };
-        pillar.TopPosition.x = nextPillarX;
-        pillar.TopPosition.y = 1.25f;
-        pillar.TopPosition.z = 0.5f;
-
-        pillar.BottomScale = { 1.0f, 2.5f };
-        pillar.BottomPosition.x = nextPillarX;
-        pillar.BottomPosition.y = -1.25f;
-        pillar.BottomPosition.z = 0.5f;
-
-        float center = st::Random::Float() * 2.5f - 1.5f;
-        float gap = 1.25f + st::Random::Float() * 2.5f;
-
-        pillar.TopPosition.y = 1.25f - ((1.25f - center) * 0.5f) + gap * 0.1f;
-        pillar.BottomPosition.y = -1.25f - ((-1.25f - center) * 0.5f) - gap * 0.1f;
-
-		//pillarIndex = pillarIndex++ % (int32_t) pillars.size();
-		pillarTarget += 1.0f;
-        nextPillarX += 1.0f;
-		pillarIndex++;
-		if (pillarIndex > pillars.size() - 1)
-        {
-		    pillarIndex = 0;
-        }
-	}
-
     st::OrthographicCamera* camera = cameraController->GetCamera();
-    auto cameraX = camera->GetPosition().x - player->GetVelocity().x * (float) timestep;
-    camera->SetPosition({ cameraX, camera->GetPosition().y, camera->GetPosition().z });
+    camera->SetPosition({ -player->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z });
 
-    st::Quad backgroundQuad{};
-    backgroundQuad.Position = { 0.0f, 0.0f, 0.0f };
-    backgroundQuad.Size = { 25.0f, 2.5f };
-    backgroundQuad.Color = { 0.3f, 0.3f, 0.3f, 1.0f };
+    backgroundQuad.Position = { player->GetPosition().x, 0.0f, 0.0f };
     renderer->SubmitQuad(backgroundQuad);
 
-    st::Quad ceilingQuad{};
-    ceilingQuad.Size = { 25.0f, 1.0f };
-    ceilingQuad.Position = { backgroundQuad.Position.x, backgroundQuad.Position.y + (backgroundQuad.Size.y / 2), 0.0f };
-    ceilingQuad.Color = { 0.2f, 0.3f, 0.8f, 1.0f };
+    ceilingQuad.Position = { backgroundQuad.Position.x, backgroundQuad.Position.y + (backgroundQuad.Size.y / 2), backgroundQuad.Position.z + 0.1f };
     renderer->SubmitQuad(ceilingQuad);
 
-    st::Quad floorQuad{};
-    floorQuad.Position = { backgroundQuad.Position.x, backgroundQuad.Position.y - (backgroundQuad.Size.y / 2), 0.0f };
-    floorQuad.Size = { 25.0f, 1.0f };
-    floorQuad.Color = { 0.2f, 0.3f, 0.8f, 1.0f };
+    floorQuad.Position = { backgroundQuad.Position.x, backgroundQuad.Position.y - (backgroundQuad.Size.y / 2), ceilingQuad.Position.z };
     renderer->SubmitQuad(floorQuad);
 
-    for (auto& pillar : pillars)
+    if (player->GetPosition().x > pillarRecyclingX)
     {
-        st::Quad quad{};
-        quad.Texture = triangleTexture;
-        quad.Color = { 0.2f, 0.8f, 0.2f, 1.0f };
-
-        quad.Position = pillar.TopPosition;
-        quad.Size = pillar.TopScale;
-        quad.RotationInDegrees = 180.0f;
-        //renderer->SubmitQuad(quad);
-
-        quad.Position = pillar.BottomPosition;
-        quad.Size = pillar.BottomScale;
-        quad.RotationInDegrees = 0.0f;
-        //renderer->SubmitQuad(quad);
+        for (uint32_t i = 0; i < 2; i++)
+        {
+            st::Quad& pillar = pillars[pillarForRecyclingIndex];
+            pillar.Position.x = pillarForRecyclingNextX;
+            pillarForRecyclingIndex++;
+        }
+        if (pillarForRecyclingIndex > pillars.size() - 1)
+        {
+            pillarForRecyclingIndex = 0;
+        }
+        pillarRecyclingX += pillars[0].Size.x;
+        pillarForRecyclingNextX += pillars[0].Size.x;
+    }
+    for (uint32_t i = 0; i < pillars.size(); i++)
+    {
+        st::Quad& pillar = pillars[i];
+        if (pillar.RotationInDegrees == 180.0f)
+        {
+            pillar.Position = { pillar.Position.x, ceilingQuad.Position.y - (pillar.Size.y / 4), ceilingQuad.Position.z + 0.1f };
+        }
+        else
+        {
+            pillar.Position = { pillar.Position.x, floorQuad.Position.y + (pillar.Size.y / 4), ceilingQuad.Position.z + 0.1f };
+        }
+        renderer->SubmitQuad(pillar);
     }
 
     player->OnUpdate(renderer, input, timestep, gravity);

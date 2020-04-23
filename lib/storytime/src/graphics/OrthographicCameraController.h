@@ -27,6 +27,10 @@ namespace storytime
 
         [[nodiscard]] OrthographicCamera* GetCamera() const;
 
+        [[nodiscard]] const glm::vec3& GetCameraPosition() const;
+
+        float GetZoomLevel() const;
+
         void SetZoomLevel(float zoomLevel);
 
         void OnUpdate(Timestep timestep, Input* input);
