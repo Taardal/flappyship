@@ -1,6 +1,6 @@
 #include "Level.h"
 
-constexpr float Level::GRAVITY = 0.05f;
+constexpr float Level::GRAVITY = 0.15f;
 
 Level::Level(st::ResourceLoader* resourceLoader, float width, float height)
         : width(width), height(height), environmentColorHSV{ 0.0f, 0.8f, 0.8f }
@@ -32,7 +32,7 @@ Level::Level(st::ResourceLoader* resourceLoader, float width, float height)
     playerConfig.Velocity = { 10.0f, 0.0f, 0.0f };
     playerConfig.Width = width / 20.0f;
     playerConfig.Height = playerConfig.Width * 1.3f;
-    playerConfig.EnginePower = 0.1f;
+    playerConfig.EnginePower = 0.5f;
     player = new Player(playerConfig);
 
     Reset();

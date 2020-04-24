@@ -16,6 +16,8 @@ public:
     };
 
 private:
+    static const float MAX_VELOCITY;
+
     glm::vec3 startPosition;
     glm::vec3 startVelocity;
     glm::vec3 velocity;

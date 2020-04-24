@@ -1,5 +1,7 @@
 #include "Player.h"
 
+constexpr float Player::MAX_VELOCITY = 30.0f;
+
 Player::Player(const Config& config)
         : startPosition(config.Position), startVelocity(config.Velocity), velocity(config.Velocity), enginePower(config.EnginePower)
 {
@@ -25,7 +27,7 @@ void Player::OnUpdate(st::Input* input, st::Timestep timestep, float gravity)
         velocity.y += enginePower;
         if (velocity.y < 0.0f)
         {
-            velocity.y += enginePower * 0.05f;
+            velocity.y += enginePower * 0.5f;
         }
 
         /*
@@ -41,12 +43,9 @@ void Player::OnUpdate(st::Input* input, st::Timestep timestep, float gravity)
     {
         velocity.y -= gravity;
     }
-    velocity.y = glm::clamp(velocity.y, -20.0f, 20.0f);
-
+    velocity.y = glm::clamp(velocity.y, -MAX_VELOCITY, MAX_VELOCITY);
     quad.Position += velocity * (float) timestep;
-    //quad.Position.y = glm::clamp(quad.Position.y, -1.5f, 1.5f);
-
-    quad.RotationInDegrees = velocity.y * 4.0f - 90.0f;
+    quad.RotationInDegrees = velocity.y * 2.0f - 90.0f;
 }
 
 void Player::OnRender(st::Renderer* renderer)
