@@ -5,7 +5,7 @@ int main()
 {
     st::Window::Config windowConfig = {};
     windowConfig.Title = "Flappyship";
-    windowConfig.Width = 1280;
+    windowConfig.Width = 1920;
     windowConfig.Height = windowConfig.Width / 16 * 12;
     windowConfig.Maximized = false;
 

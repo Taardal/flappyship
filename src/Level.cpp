@@ -3,13 +3,13 @@
 constexpr float Level::GRAVITY = 0.05f;
 
 Level::Level(st::ResourceLoader* resourceLoader, float width, float height)
-        : width(width), height(height)
+        : width(width), height(height), environmentColorHSV{ 0.0f, 0.8f, 0.8f }
 {
     backgroundQuad.Color = { 0.3f, 0.3f, 0.3f, 1.0f };
     backgroundQuad.Size = { width, height };
     backgroundQuad.Position = { 0.0f, 0.0f, 0.0f };
 
-    ceilingQuad.Color = { 0.2f, 0.3f, 0.8f, 1.0f };
+    ceilingQuad.Color = GetRGBA(environmentColorHSV);
     ceilingQuad.Size = { backgroundQuad.Size.x, 5.0f };
     ceilingQuad.Position = { backgroundQuad.Position.x, backgroundQuad.Position.y + (backgroundQuad.Size.y / 2), backgroundQuad.Position.z + 0.1f };
 
@@ -19,6 +19,7 @@ Level::Level(st::ResourceLoader* resourceLoader, float width, float height)
 
     SpikeManager::Config spikeConfig = {};
     spikeConfig.Texture = resourceLoader->LoadTexture("triangle.png");
+    spikeConfig.Color = GetRGBA(environmentColorHSV);
     spikeConfig.Width = 30.0f;
     spikeConfig.WidthFactor = 0.9f;
     spikeConfig.Height = height;
@@ -59,6 +60,7 @@ void Level::OnUpdate(st::Input* input, st::Timestep timestep)
     player->OnUpdate(input, timestep, GRAVITY);
     spikeManager->OnUpdate(player->GetPosition());
     SetBackgroundPositions();
+    SetEnvironmentColors(timestep);
 }
 
 void Level::OnRender(st::Renderer* renderer)
@@ -82,6 +84,19 @@ void Level::SetBackgroundPositions()
     backgroundQuad.Position = { player->GetPosition().x, backgroundQuad.Position.y, backgroundQuad.Position.z };
     ceilingQuad.Position = { backgroundQuad.Position.x, ceilingQuad.Position.y, ceilingQuad.Position.z };
     floorQuad.Position = { backgroundQuad.Position.x, floorQuad.Position.y, floorQuad.Position.z };
+}
+
+void Level::SetEnvironmentColors(const st::Timestep& timestep)
+{
+    environmentColorHSV.x += 0.1f * timestep;
+    if (environmentColorHSV.x > 1.0f)
+    {
+        environmentColorHSV.x = 0.0f;
+    }
+    const glm::vec4& rgba = GetRGBA(environmentColorHSV);
+    spikeManager->SetColor(rgba);
+    ceilingQuad.Color = rgba;
+    floorQuad.Color = rgba;
 }
 
 bool Level::IsCollision() const
@@ -127,4 +142,49 @@ bool Level::IsPlayerVertexWithinSpikeVertices(const glm::vec4& playerVertex, glm
     return A < 0 ?
            (s <= 0 && s + t >= A) :
            (s >= 0 && s + t <= A);
+}
+
+glm::vec4 Level::GetRGBA(glm::vec3 hsv)
+{
+    int H = (int)(hsv.x * 360.0f);
+    double S = hsv.y;
+    double V = hsv.z;
+
+    double C = S * V;
+    double X = C * (1 - abs(fmod(H / 60.0, 2) - 1));
+    double m = V - C;
+    double Rs, Gs, Bs;
+
+    if (H >= 0 && H < 60) {
+        Rs = C;
+        Gs = X;
+        Bs = 0;
+    }
+    else if (H >= 60 && H < 120) {
+        Rs = X;
+        Gs = C;
+        Bs = 0;
+    }
+    else if (H >= 120 && H < 180) {
+        Rs = 0;
+        Gs = C;
+        Bs = X;
+    }
+    else if (H >= 180 && H < 240) {
+        Rs = 0;
+        Gs = X;
+        Bs = C;
+    }
+    else if (H >= 240 && H < 300) {
+        Rs = X;
+        Gs = 0;
+        Bs = C;
+    }
+    else {
+        Rs = C;
+        Gs = 0;
+        Bs = X;
+    }
+
+    return { (Rs + m), (Gs + m), (Bs + m), 1.0f };
 }

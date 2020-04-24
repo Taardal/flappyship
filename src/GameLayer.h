@@ -40,8 +40,6 @@ public:
 
 private:
     void SetCameraPosition() const;
-
-    [[nodiscard]] bool IsGameOver() const;
 };
 
 

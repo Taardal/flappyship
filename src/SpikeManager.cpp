@@ -14,7 +14,7 @@ SpikeManager::SpikeManager(const Config& config)
     {
         st::Quad& spike = spikes[i];
         spike.Texture = config.Texture;
-        spike.Color = { 0.2f, 0.8f, 0.2f, 1.0f };
+        spike.Color = config.Color;
         spike.Size = { spikeWidth, spikeHeight };
         spike.Position = { 0.0f, 0.0f, config.ZPosition };
         spike.RotationInDegrees = i % 2 == 0 ? 180.0f : 0.0f;
@@ -24,9 +24,23 @@ SpikeManager::SpikeManager(const Config& config)
     Reset();
 }
 
+const std::vector<st::Quad>& SpikeManager::GetSpikes() const
+{
+    return spikes;
+}
+
+
 uint32_t SpikeManager::GetSpikeWidth() const
 {
     return spikeWidth * spikeWidthFactor;
+}
+
+void SpikeManager::SetColor(const glm::vec4& rgba)
+{
+    for (st::Quad& spike : spikes)
+    {
+        spike.Color = rgba;
+    }
 }
 
 void SpikeManager::OnUpdate(const glm::vec3& playerPosition)
@@ -118,11 +132,6 @@ float SpikeManager::GetY(const st::Quad& spike) const
         y -= centerSkew;
     }
     return y;
-}
-
-const std::vector<st::Quad>& SpikeManager::GetSpikes() const
-{
-    return spikes;
 }
 
 void SpikeManager::FillTransformedVertices(glm::vec4* vertices, const st::Quad& spike)

@@ -6,7 +6,6 @@ Player::Player(const Config& config)
     quad.Texture = config.Texture;
     quad.Position = config.Position;
     quad.Size = { config.Width, config.Height };
-    quad.Color = { 0.8f, 0.2f, 0.3f, 1.0f };
 }
 
 glm::vec3 Player::GetPosition() const

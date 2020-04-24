@@ -38,7 +38,7 @@ void GameLayer::OnUpdate(st::Timestep timestep)
         }
         case GameState::Play:
         {
-            if (IsGameOver())
+            if (level->IsCollision())
             {
                 gameState = GameState::End;
             }
@@ -86,7 +86,8 @@ void GameLayer::OnImGuiUpdate()
         }
         default:
         {
-            ImGui::Text("Game over! Score: %d", level->GetScore());
+            ImGui::Text("Game over!");
+            ImGui::Text("Score: %d", level->GetScore());
         }
     }
     ImGui::End();
@@ -95,12 +96,6 @@ void GameLayer::OnImGuiUpdate()
 void GameLayer::OnEvent(const storytime::Event& event)
 {
     cameraController->OnEvent(event);
-}
-
-bool GameLayer::IsGameOver() const
-{
-    //return level->GetPlayer()->GetPosition().y < -(cameraHeight / 2) || level->GetPlayer()->GetPosition().y > cameraHeight / 2;
-    return level->IsCollision();
 }
 
 void GameLayer::SetCameraPosition() const

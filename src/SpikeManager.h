@@ -8,6 +8,7 @@ public:
     struct Config
     {
         st::Ref<st::Texture> Texture;
+        glm::vec4 Color;
         float Width;
         float WidthFactor;
         float Height;
@@ -40,6 +41,8 @@ public:
     [[nodiscard]] const std::vector<st::Quad>& GetSpikes() const;
 
     [[nodiscard]] uint32_t GetSpikeWidth() const;
+
+    void SetColor(const glm::vec4& rgba);
 
     void OnUpdate(const glm::vec3& playerPosition);
 

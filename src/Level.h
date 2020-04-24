@@ -11,6 +11,7 @@ private:
 
     float width;
     float height;
+    glm::vec3 environmentColorHSV;
     st::Quad backgroundQuad;
     st::Quad ceilingQuad;
     st::Quad floorQuad;
@@ -37,7 +38,11 @@ public:
 private:
     void SetBackgroundPositions();
 
+    void SetEnvironmentColors(const st::Timestep& timestep);
+
     static bool IsPlayerVertexWithinSpikeVertices(const glm::vec4& playerVertex, glm::vec4* spikeVertices);
+
+    static glm::vec4 GetRGBA(glm::vec3 hsv);
 };
 
 
