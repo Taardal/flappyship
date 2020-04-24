@@ -2,7 +2,7 @@
 
 #include <storytime/Storytime.h>
 
-class SpikePool
+class SpikeManager
 {
 public:
     struct Config
@@ -15,13 +15,14 @@ public:
     };
 
 private:
+
     static const uint32_t SPIKE_PAIR_COUNT;
     static const uint32_t GAP_SIZE_MIN;
     static const uint32_t GAP_SIZE_MAX;
     static const uint32_t CENTER_SKEW_MIN;
     static const uint32_t CENTER_SKEW_MAX;
-
     float spikeWidth;
+
     float spikeWidthFactor;
     float spikeHeight;
     std::vector<st::Quad> spikes;
@@ -32,9 +33,11 @@ private:
     float gapSize = 0.0f;
     float centerSkew = 0.0f;
     bool skewCenterUpwards = false;
-
 public:
-    explicit SpikePool(const Config& config);
+
+    explicit SpikeManager(const Config& config);
+
+    [[nodiscard]] const std::vector<st::Quad>& GetSpikes() const;
 
     [[nodiscard]] uint32_t GetSpikeWidth() const;
 
@@ -43,6 +46,8 @@ public:
     void OnRender(st::Renderer* renderer);
 
     void Reset();
+
+    void FillTransformedVertices(glm::vec4* vertices, const st::Quad& quad);
 
 private:
     [[nodiscard]] float GetY(const st::Quad& spike) const;

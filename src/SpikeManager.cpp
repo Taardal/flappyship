@@ -1,13 +1,13 @@
-#include "SpikePool.h"
+#include "SpikeManager.h"
 
-constexpr uint32_t SpikePool::SPIKE_PAIR_COUNT = 4;
-constexpr uint32_t SpikePool::GAP_SIZE_MIN = 0;
-constexpr uint32_t SpikePool::GAP_SIZE_MAX = 3;
-constexpr uint32_t SpikePool::CENTER_SKEW_MIN = 0;
-constexpr uint32_t SpikePool::CENTER_SKEW_MAX = 10;
+constexpr uint32_t SpikeManager::SPIKE_PAIR_COUNT = 4;
+constexpr uint32_t SpikeManager::GAP_SIZE_MIN = 0;
+constexpr uint32_t SpikeManager::GAP_SIZE_MAX = 3;
+constexpr uint32_t SpikeManager::CENTER_SKEW_MIN = 0;
+constexpr uint32_t SpikeManager::CENTER_SKEW_MAX = 10;
 
-SpikePool::SpikePool(const Config& config)
-    : spikeWidth(config.Width), spikeWidthFactor(config.WidthFactor), spikeHeight(config.Height)
+SpikeManager::SpikeManager(const Config& config)
+        : spikeWidth(config.Width), spikeWidthFactor(config.WidthFactor), spikeHeight(config.Height)
 {
     spikes.resize(SPIKE_PAIR_COUNT * 2);
     for (uint32_t i = 0; i < spikes.size(); i++)
@@ -24,12 +24,12 @@ SpikePool::SpikePool(const Config& config)
     Reset();
 }
 
-uint32_t SpikePool::GetSpikeWidth() const
+uint32_t SpikeManager::GetSpikeWidth() const
 {
     return spikeWidth * spikeWidthFactor;
 }
 
-void SpikePool::OnUpdate(const glm::vec3& playerPosition)
+void SpikeManager::OnUpdate(const glm::vec3& playerPosition)
 {
     if (playerPosition.x > nextTriggerX)
     {
@@ -50,7 +50,7 @@ void SpikePool::OnUpdate(const glm::vec3& playerPosition)
     }
 }
 
-void SpikePool::OnRender(st::Renderer* renderer)
+void SpikeManager::OnRender(st::Renderer* renderer)
 {
     for (auto& pillar : spikes)
     {
@@ -58,7 +58,7 @@ void SpikePool::OnRender(st::Renderer* renderer)
     }
 }
 
-void SpikePool::Reset()
+void SpikeManager::Reset()
 {
     float x = 0.0f;
     for (uint32_t i = 0; i < spikes.size(); i++)
@@ -81,24 +81,24 @@ void SpikePool::Reset()
     nextIndex = 0;
 }
 
-void SpikePool::SetNextGapSize()
+void SpikeManager::SetNextGapSize()
 {
     gapSize = random.UInt(GAP_SIZE_MIN, GAP_SIZE_MAX);
 }
 
-void SpikePool::SetNextCenterPoint()
+void SpikeManager::SetNextCenterPoint()
 {
     centerSkew = random.UInt(CENTER_SKEW_MIN, CENTER_SKEW_MAX);
     skewCenterUpwards = random.UInt(0, 1) == 1;
 }
 
-void SpikePool::SetNextPositions()
+void SpikeManager::SetNextPositions()
 {
     nextX += GetSpikeWidth();
     nextTriggerX += GetSpikeWidth();
 }
 
-float SpikePool::GetY(const st::Quad& spike) const
+float SpikeManager::GetY(const st::Quad& spike) const
 {
     float y = spike.Size.y / 2;
     if (spike.RotationInDegrees == 180.0f)
@@ -118,4 +118,23 @@ float SpikePool::GetY(const st::Quad& spike) const
         y -= centerSkew;
     }
     return y;
+}
+
+const std::vector<st::Quad>& SpikeManager::GetSpikes() const
+{
+    return spikes;
+}
+
+void SpikeManager::FillTransformedVertices(glm::vec4* vertices, const st::Quad& spike)
+{
+    vertices[0] = { -0.5f + 0.1f, -0.5f + 0.1f, 0.0f, 1.0f };
+    vertices[1] = {  0.5f - 0.1f, -0.5f + 0.1f, 0.0f, 1.0f };
+    vertices[2] = {  0.0f + 0.0f,  0.5f - 0.1f, 0.0f, 1.0f };
+    for (int i = 0; i < 3; i++)
+    {
+        const glm::mat4& translation = glm::translate(glm::mat4(1.0f), { spike.Position.x, spike.Position.y, 0.0f });
+        const glm::mat4& rotation = glm::rotate(glm::mat4(1.0f), glm::radians(spike.RotationInDegrees), { 0.0f, 0.0f, 1.0f });
+        const glm::mat4& scale = glm::scale(glm::mat4(1.0f), { spike.Size.x, spike.Size.y, 1.0f });
+        vertices[i] = translation * rotation * scale * vertices[i];
+    }
 }

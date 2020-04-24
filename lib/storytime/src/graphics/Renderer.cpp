@@ -144,26 +144,7 @@ namespace storytime
         const auto& scale = glm::scale(glm::mat4(1.0f), { quad.Size.x, quad.Size.y, 1.0f });
         glm::mat4 transform = translation * rotation * scale;
 
-        /*
-        vertices[vertexCount].Position = quad.Position;
-        vertices[vertexCount].Color = quad.Color;
-        vertexCount++;
-
-        vertices[vertexCount].Position = { quad.Position.x + quad.Size.x, quad.Position.y, 1.0f };
-        vertices[vertexCount].Color = quad.Color;
-        vertexCount++;
-
-        vertices[vertexCount].Position = { quad.Position.x + quad.Size.x, quad.Position.y + quad.Size.y, 1.0f};
-        vertices[vertexCount].Color = quad.Color;
-        vertexCount++;
-
-        vertices[vertexCount].Position = { quad.Position.x, quad.Position.y + quad.Size.y, 1.0f };
-        vertices[vertexCount].Color = quad.Color;
-        vertexCount++;
-        */
-
         vertices[vertexCount].Position = transform * glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f);
-        //vertices[vertexCount].Position = transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         vertices[vertexCount].Color = quad.Color;
         vertices[vertexCount].TextureCoordinate = { 0.0f, 0.0f };
         vertices[vertexCount].TextureIndex = textureIndex;
@@ -171,7 +152,6 @@ namespace storytime
         vertexCount++;
 
         vertices[vertexCount].Position = transform * glm::vec4(0.5f, -0.5f, 0.0f, 1.0f);
-        //vertices[vertexCount].Position = transform * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
         vertices[vertexCount].Color = quad.Color;
         vertices[vertexCount].TextureCoordinate = { 1.0f, 0.0f };
         vertices[vertexCount].TextureIndex = textureIndex;
@@ -179,7 +159,6 @@ namespace storytime
         vertexCount++;
 
         vertices[vertexCount].Position = transform * glm::vec4(0.5f, 0.5f, 0.0f, 1.0f);
-        //vertices[vertexCount].Position = transform * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
         vertices[vertexCount].Color = quad.Color;
         vertices[vertexCount].TextureCoordinate = { 1.0f, 1.0f };
         vertices[vertexCount].TextureIndex = textureIndex;
@@ -187,7 +166,6 @@ namespace storytime
         vertexCount++;
 
         vertices[vertexCount].Position = transform * glm::vec4(-0.5f, 0.5f, 0.0f, 1.0f);
-        //vertices[vertexCount].Position = transform * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
         vertices[vertexCount].Color = quad.Color;
         vertices[vertexCount].TextureCoordinate = { 0.0f, 1.0f };
         vertices[vertexCount].TextureIndex = textureIndex;

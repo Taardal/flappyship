@@ -27,11 +27,15 @@ public:
 
     [[nodiscard]] glm::vec3 GetPosition() const;
 
+    [[nodiscard]] glm::vec2 GetSize() const;
+
     void OnUpdate(st::Input* input, st::Timestep timestep, float gravity);
 
     void OnRender(st::Renderer* renderer);
 
     void Reset();
+
+    void FillTransformedVertices(glm::vec4* vertices) const;
 };
 
 

@@ -1,4 +1,4 @@
-#include "Flappyship.h"
+#include "GameLayer.h"
 #include <storytime/Storytime.h>
 
 int main()
@@ -23,6 +23,33 @@ int main()
     engine->Run();
     delete engine;
 }
+
+class Flappyship : public st::Application
+{
+private:
+    GameLayer* gameLayer;
+
+public:
+    Flappyship(
+            st::Window* window,
+            st::Renderer* renderer,
+            st::ImGuiRenderer* imGuiRenderer,
+            st::OrthographicCameraController* cameraController,
+            st::ResourceLoader* resourceLoader,
+            st::Input* input
+    )
+            : Application(window, renderer, imGuiRenderer, cameraController),
+              gameLayer(new GameLayer(renderer, input, resourceLoader, cameraController))
+    {
+        PushLayer(gameLayer);
+    }
+
+    ~Flappyship()
+    {
+        delete gameLayer;
+    }
+
+};
 
 st::Application* CreateApplication(
         st::Window* window,

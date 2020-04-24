@@ -7,7 +7,6 @@ GameLayer::GameLayer(st::Renderer* renderer, st::Input* input, st::ResourceLoade
     cameraHeight = cameraController->GetZoomLevel() * 2;
     cameraWidth = cameraHeight / 12 * 16;
     level = new Level(resourceLoader, cameraWidth, cameraHeight);
-    UpdateCamera();
 }
 
 GameLayer::~GameLayer()
@@ -17,6 +16,7 @@ GameLayer::~GameLayer()
 
 void GameLayer::OnAttach()
 {
+    SetCameraPosition();
 }
 
 void GameLayer::OnDetach()
@@ -57,7 +57,7 @@ void GameLayer::OnUpdate(st::Timestep timestep)
             }
         }
     }
-    UpdateCamera();
+    SetCameraPosition();
     level->OnRender(renderer);
 }
 
@@ -86,7 +86,7 @@ void GameLayer::OnImGuiUpdate()
         }
         default:
         {
-            ImGui::Text("Game over!");
+            ImGui::Text("Game over! Score: %d", level->GetScore());
         }
     }
     ImGui::End();
@@ -99,10 +99,11 @@ void GameLayer::OnEvent(const storytime::Event& event)
 
 bool GameLayer::IsGameOver() const
 {
-    return level->GetPlayer()->GetPosition().y < -(cameraHeight / 2) || level->GetPlayer()->GetPosition().y > cameraHeight / 2;
+    //return level->GetPlayer()->GetPosition().y < -(cameraHeight / 2) || level->GetPlayer()->GetPosition().y > cameraHeight / 2;
+    return level->IsCollision();
 }
 
-void GameLayer::UpdateCamera() const
+void GameLayer::SetCameraPosition() const
 {
     st::OrthographicCamera* camera = cameraController->GetCamera();
     camera->SetPosition({ -level->GetPlayer()->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z });

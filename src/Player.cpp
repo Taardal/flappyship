@@ -1,16 +1,22 @@
 #include "Player.h"
 
 Player::Player(const Config& config)
-     : startPosition(config.Position), startVelocity(config.Velocity), velocity(config.Velocity), enginePower(config.EnginePower)
+        : startPosition(config.Position), startVelocity(config.Velocity), velocity(config.Velocity), enginePower(config.EnginePower)
 {
     quad.Texture = config.Texture;
     quad.Position = config.Position;
     quad.Size = { config.Width, config.Height };
+    quad.Color = { 0.8f, 0.2f, 0.3f, 1.0f };
 }
 
 glm::vec3 Player::GetPosition() const
 {
     return quad.Position;
+}
+
+glm::vec2 Player::GetSize() const
+{
+    return quad.Size;
 }
 
 void Player::OnUpdate(st::Input* input, st::Timestep timestep, float gravity)
@@ -54,4 +60,19 @@ void Player::Reset()
     quad.Position = startPosition;
     quad.RotationInDegrees = 0;
     velocity = startVelocity;
+}
+
+void Player::FillTransformedVertices(glm::vec4* vertices) const
+{
+    vertices[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+    vertices[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
+    vertices[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+    vertices[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+    for (int i = 0; i < 4; i++)
+    {
+        const glm::mat4& translation = glm::translate(glm::mat4(1.0f), { quad.Position.x, quad.Position.y, 0.0f });
+        const glm::mat4& rotation = glm::rotate(glm::mat4(1.0f), glm::radians(quad.RotationInDegrees), { 0.0f, 0.0f, 1.0f });
+        const glm::mat4& scale = glm::scale(glm::mat4(1.0f), { quad.Size.x, quad.Size.y, 1.0f });
+        vertices[i] = translation * rotation * scale * vertices[i];
+    }
 }

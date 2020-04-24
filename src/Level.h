@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Player.h"
-#include "SpikePool.h"
+#include "SpikeManager.h"
 #include <storytime/Storytime.h>
 
 class Level
@@ -9,10 +9,12 @@ class Level
 private:
     static const float GRAVITY;
 
+    float width;
+    float height;
     st::Quad backgroundQuad;
     st::Quad ceilingQuad;
     st::Quad floorQuad;
-    SpikePool* spikePool;
+    SpikeManager* spikeManager;
     Player* player;
 
 public:
@@ -30,8 +32,12 @@ public:
 
     void Reset();
 
+    [[nodiscard]] bool IsCollision() const;
+
 private:
     void SetBackgroundPositions();
+
+    static bool IsPlayerVertexWithinSpikeVertices(const glm::vec4& playerVertex, glm::vec4* spikeVertices);
 };
 
 

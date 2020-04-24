@@ -39,7 +39,7 @@ public:
     void OnEvent(const storytime::Event& event) override;
 
 private:
-    void UpdateCamera() const;
+    void SetCameraPosition() const;
 
     [[nodiscard]] bool IsGameOver() const;
 };
