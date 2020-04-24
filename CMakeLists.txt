@@ -3,7 +3,7 @@ project(flappyship)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(${PROJECT_NAME} src/main.cpp src/GameLayer.cpp src/GameLayer.h src/Player.cpp src/Player.h src/Level.cpp src/Level.h src/SpikeManager.cpp src/SpikeManager.h)
+add_executable(${PROJECT_NAME} src/main.cpp src/GameLayer.cpp src/GameLayer.h src/Player.cpp src/Player.h src/Level.cpp src/Level.h src/SpikeManager.cpp src/SpikeManager.h src/ParticleEmitter.cpp src/ParticleEmitter.h)
 
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(LIB_DIR ${PROJECT_SOURCE_DIR}/lib)

@@ -10,7 +10,9 @@ namespace storytime
     public:
         Random();
 
-        uint32_t UInt(uint32_t min, uint32_t max);
+        uint32_t Next();
+
+        uint32_t Next(uint32_t min, uint32_t max);
     };
 }
 

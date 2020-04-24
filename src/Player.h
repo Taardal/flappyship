@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ParticleEmitter.h"
 #include <storytime/Storytime.h>
 
 class Player
@@ -23,6 +24,12 @@ private:
     glm::vec3 velocity;
     float enginePower;
     st::Quad quad;
+    ParticleEmitter::Config smokeParticle;
+    ParticleEmitter::Config flameParticle;
+    ParticleEmitter particleEmitter;
+    float time;
+    float smokeEmitInterval;
+    float smokeNextEmitTime;
 
 public:
     explicit Player(const Config& config);
@@ -38,6 +45,11 @@ public:
     void Reset();
 
     void FillTransformedVertices(glm::vec4* vertices) const;
+
+private:
+    [[nodiscard]] float GetRotation() const;
+
+    [[nodiscard]] glm::vec3 getParticleEmissionOffset() const;
 };
 
 

@@ -28,7 +28,7 @@ Level::Level(st::ResourceLoader* resourceLoader, float width, float height)
 
     Player::Config playerConfig = {};
     playerConfig.Texture = resourceLoader->LoadTexture("ship.png");
-    playerConfig.Position = { -(width / 2), 0.0f, spikeConfig.ZPosition + 0.1f };
+    playerConfig.Position = { -(width / 2), 0.0f, 1.0f };
     playerConfig.Velocity = { 10.0f, 0.0f, 0.0f };
     playerConfig.Width = width / 20.0f;
     playerConfig.Height = playerConfig.Width * 1.3f;

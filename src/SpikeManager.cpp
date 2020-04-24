@@ -97,13 +97,13 @@ void SpikeManager::Reset()
 
 void SpikeManager::SetNextGapSize()
 {
-    gapSize = random.UInt(GAP_SIZE_MIN, GAP_SIZE_MAX);
+    gapSize = random.Next(GAP_SIZE_MIN, GAP_SIZE_MAX);
 }
 
 void SpikeManager::SetNextCenterPoint()
 {
-    centerSkew = random.UInt(CENTER_SKEW_MIN, CENTER_SKEW_MAX);
-    skewCenterUpwards = random.UInt(0, 1) == 1;
+    centerSkew = random.Next(CENTER_SKEW_MIN, CENTER_SKEW_MAX);
+    skewCenterUpwards = random.Next(0, 1) == 1;
 }
 
 void SpikeManager::SetNextPositions()
