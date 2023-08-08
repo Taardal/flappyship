@@ -1,3 +1,10 @@
-.DS_Store
-.idea
+# Build & Intermediates
+build
 cmake-build-debug
+
+# Editors & IDEs
+.idea
+
+# MacOS
+.DS_Store
+
