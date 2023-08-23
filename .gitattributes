@@ -1,2 +1,1 @@
-lib/* linguist-vendored
-img/* linguist-documentation
+lib/** linguist-vendored
